@@ -1,6 +1,6 @@
-# 🛡️ Security Policy — CryptoHives
+# 🛡️ Security Policy — CryptoHives Open Source Initiative
 
-Thank you for helping to keep **CryptoHives** and its open-source ecosystem secure.
+Thank you for helping to keep **CryptoHives Open Source Initiative** and its ecosystem secure.
 
 We take the security of our software seriously.  
 If you discover a potential vulnerability, please report it responsibly using the instructions below.
@@ -55,7 +55,7 @@ We’ll keep you informed throughout the process and credit you for responsible 
 Use the following PGP key to encrypt sensitive information before sending it to us:
 
 
-**Fingerprint:** ``
+**Fingerprint:** `tbd`
 
 *(Rotate keys periodically — verify the latest version at [https://cryptohives.org/security](https://cryptohives.org/security)).*
 
@@ -68,8 +68,8 @@ We ask all researchers to:
 - Avoid actions that disrupt services or compromise user data.
 - Respect the privacy of users and systems during testing.
 
-We appreciate your contribution to the safety and trust of the CryptoHives ecosystem.  
-Together, we can keep the hive secure. 🐝
+We appreciate your contribution to the safety and trust of the CryptoHives Open Source Initiative.  
+Together, we can keep the hives secure. 🐝
 
 ---
 
