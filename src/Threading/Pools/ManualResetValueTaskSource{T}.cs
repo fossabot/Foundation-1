@@ -5,6 +5,7 @@ namespace CryptoHives.Foundation.Threading.Pools;
 
 using Microsoft.Extensions.ObjectPool;
 using System;
+using System.Threading;
 using System.Threading.Tasks.Sources;
 
 /// <summary>
@@ -18,13 +19,21 @@ using System.Threading.Tasks.Sources;
 /// </remarks>
 public sealed class ManualResetValueTaskSource<T> : IValueTaskSource<T>, IValueTaskSource, IResettable
 {
-    private ManualResetValueTaskSourceCore<T> _core;
-    private short _version;
+    private ManualResetValueTaskSourceCore<T> _core = default;
+    private ObjectPool<ManualResetValueTaskSource<T>>? _ownerPool;
+
+    /// <summary>
+    /// Sets the pool to which the object is returned after it was awaited.
+    /// </summary>
+    public void SetOwnerPool(ObjectPool<ManualResetValueTaskSource<T>>? ownerPool)
+    {
+        _ownerPool = ownerPool;
+    }
 
     /// <summary>
     /// Gets the version number of the current instance.
     /// </summary>
-    public short Version => _version;
+    public short Version => _core.Version;
 
     /// <inheritdoc/>
     /// <remarks>
@@ -32,8 +41,8 @@ public sealed class ManualResetValueTaskSource<T> : IValueTaskSource<T>, IValueT
     /// </remarks>
     public bool TryReset()
     {
+        _ownerPool = null;
         _core.Reset();
-        unchecked { _version++; }
         return true;
     }
 
@@ -54,11 +63,19 @@ public sealed class ManualResetValueTaskSource<T> : IValueTaskSource<T>, IValueT
 
     /// <inheritdoc/>
     T IValueTaskSource<T>.GetResult(short token)
-        => _core.GetResult(token);
+    {
+        T result = _core.GetResult(token);
+        _ownerPool?.Return(this);
+        return result;
+    }
+
 
     /// <inheritdoc/>
     void IValueTaskSource.GetResult(short token)
-        => _core.GetResult(token);
+    {
+        _core.GetResult(token);
+        _ownerPool?.Return(this);
+    }
 
     /// <inheritdoc/>
     public ValueTaskSourceStatus GetStatus(short token)
