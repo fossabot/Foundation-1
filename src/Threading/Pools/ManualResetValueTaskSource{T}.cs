@@ -11,12 +11,12 @@ using System.Threading.Tasks.Sources;
 /// Represents a synchronization primitive that can be used to signal the completion of an operation.
 /// </summary>
 /// <remarks>
-/// This class is a sealed implementation of <see cref="IValueTaskSource"/> and provides methods to
+/// This class is a sealed implementation of <see cref="IValueTaskSource{T}"/> and provides methods to
 /// manage the lifecycle of a task-like operation. It allows resetting and signaling the completion of the operation,
 /// and supports querying the status and retrieving the result.
 /// The <see cref="IResettable"/> interface is implemented to allow resetting the state of the instance for reuse by an <see cref="ObjectPool"/>.
 /// </remarks>
-internal sealed class PooledValueTaskSource<T> : IValueTaskSource<T>, IValueTaskSource, IResettable
+public sealed class ManualResetValueTaskSource<T> : IValueTaskSource<T>, IValueTaskSource, IResettable
 {
     private ManualResetValueTaskSourceCore<T> _core;
     private short _version;
@@ -38,7 +38,7 @@ internal sealed class PooledValueTaskSource<T> : IValueTaskSource<T>, IValueTask
     }
 
     /// <summary>
-    /// Signals the completion of an operation, setting the result to <see langword="true"/>.
+    /// Signals the completion of an operation, setting the result to T.
     /// </summary>
     /// <remarks>
     /// This method is typically used to indicate that an asynchronous operation has completed successfully.
